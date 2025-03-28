@@ -13,33 +13,33 @@ The process consists of the following steps :
 
 ```kotlin
 fun WebView(
-	key: String,
-	modifier: Modifier = Modifier
+    key: String,
+    modifier: Modifier = Modifier
 ) {
-	val savedBundle: Bundle = rememberSaveable(key) { Bundle() }
+    val savedBundle: Bundle = rememberSaveable(key) { Bundle() }
 
-	val webView by remember(key) {
-		WebView(context) { /* ... */ }
-	}
+    val webView by remember(key) {
+        WebView(context) { /* ... */ }
+    }
 
-	DisposableEffect(key) {
-		onDispose {
-			webView.saveState(savedBundle)
-			webView.destroy()
-		}
-	}
+    DisposableEffect(key) {
+        onDispose {
+            webView.saveState(savedBundle)
+            webView.destroy()
+        }
+    }
 
-	AndroidView(
-		modifier = modifier,
-		factory = { webview }
-	)
+    AndroidView(
+        modifier = modifier,
+        factory = { webview }
+    )
 }
 ```
 
 ### pros and cons.
 * **Advantages** 
-	* Simple to implement.
+    * Simple to implement.
 * **Disadvantages** 
-	* The Webview instance is recreated frequantly when navigating between screens.
-	* Only works on Android; not compatible with Kotlin Multiplatform (KMP)
+    * The Webview instance is recreated frequantly when navigating between screens.
+    * Only works on Android; not compatible with Kotlin Multiplatform (KMP)
 
