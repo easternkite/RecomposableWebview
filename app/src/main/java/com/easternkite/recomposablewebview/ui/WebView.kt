@@ -73,11 +73,44 @@ fun WebView(
         }
     }
 
-    DisposableEffect(key) {
-        onDispose {
+    WebViewInternal(
+        modifier = modifier,
+        webView = webView,
+        canGoBack = canGoBack,
+        onDispose = {
             webView.saveState(savedBundle)
             webView.destroy()
         }
+    )
+}
+
+@Composable
+fun WebView(
+    key: String,
+    controller: WebViewController,
+    isPop: () -> Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var canGoBack by rememberSaveable(key) { mutableStateOf(false) }
+    val webView = controller.retrieve(key) { canGoBack = it }
+
+    WebViewInternal(
+        webView = webView,
+        canGoBack = canGoBack,
+        onDispose = { controller.dispose(key, isPop()) },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun WebViewInternal(
+    webView: WebView,
+    canGoBack: Boolean,
+    onDispose: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DisposableEffect(webView) {
+        onDispose(onDispose)
     }
 
     BackHandler(canGoBack) {
